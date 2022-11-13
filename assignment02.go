@@ -55,7 +55,6 @@ func ListBlocks(chainHead *Block) {
 	currentNode := chainHead
 	for currentNode != nil {
 		data := *currentNode
-		// println(data.BlockData)
 		DisplayTransactions(data.BlockData)
 		currentNode = data.PrevPointer
 	}
@@ -70,54 +69,13 @@ func DisplayTransactions(blockData []Transaction) {
 	}
 }
 
-func NewTransaction(sender string, receiver string, amount int) Transaction {
-	// id := CalculateHash(sender + receiver + string(amount))
-	transaction := Transaction{TransactionID: "0", Sender: sender, Receiver: receiver, Amount: amount}
-	return transaction
+func TransactionID(sender string, receiver string, amount int) string {
+	dataString := sender + receiver + string(amount)
+	return fmt.Sprintf("%x", sha256.Sum256([]byte(dataString)))
 }
 
-// func main() {
-// 	// Create blockchain
-// 	var blockchain Blockchain
-
-// 	// Create BlockData
-// 	var blockData []Transaction
-
-// 	// Create transactions # 1
-// 	transaction := NewTransaction("Satoshi", "Vitalik", 10)
-// 	// Add transaction to Block
-// 	blockData = append(blockData, transaction)
-
-// 	// Create transactions # 2
-// 	transaction = NewTransaction("Satoshi", "Cardano", 23)
-// 	// Add transaction to Block
-// 	blockData = append(blockData, transaction)
-
-// 	// Add block to blockchain
-// 	blockchain.ChainHead = NewBlock(blockData, nil)
-
-// 	// Create transactions # 3
-// 	transaction = NewTransaction("Alice", "Bob", 87)
-// 	// Add transaction to Block
-// 	blockData = append(blockData, transaction)
-
-// 	// Create transactions # 4
-// 	transaction = NewTransaction("Bob", "Alice", 10)
-// 	// Add transaction to Block
-// 	blockData = append(blockData, transaction)
-
-// 	// Add second block to blockchain
-// 	blockchain.ChainHead = NewBlock(blockData, blockchain.ChainHead)
-// 	// Display blockchain
-// 	ListBlocks(blockchain.ChainHead)
-
-// 	// Verify cheating
-// 	for blockchain.ChainHead != nil {
-// 		if blockchain.ChainHead.CurrentHash != CalculateHash(blockchain.ChainHead.BlockData, blockchain.ChainHead.Nonce) {
-// 			fmt.Println("Verification failed!")
-// 			return
-// 		}
-// 		blockchain.ChainHead = blockchain.ChainHead.PrevPointer
-// 	}
-// 	fmt.Println("Verification passed!")
-// }
+func NewTransaction(sender string, receiver string, amount int) Transaction {
+	id := TransactionID(sender, receiver, amount)
+	transaction := Transaction{TransactionID: id, Sender: sender, Receiver: receiver, Amount: amount}
+	return transaction
+}
