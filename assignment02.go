@@ -53,15 +53,18 @@ func NewBlock(blockData []Transaction, chainHead *Block) *Block {
 
 func ListBlocks(chainHead *Block) {
 	currentNode := chainHead
+	i := 0
 	for currentNode != nil {
 		data := *currentNode
+		println("Block", i)
 		DisplayTransactions(data.BlockData)
 		currentNode = data.PrevPointer
+		i++
 	}
 }
 
 func DisplayTransactions(blockData []Transaction) {
-	for i := 1; i < len(blockData); i++ {
+	for i := 0; i < len(blockData); i++ {
 		print("ID: ", blockData[i].TransactionID, " ")
 		print("Sender: ", blockData[i].Sender, " ")
 		print("Receiver: ", blockData[i].Receiver, " ")
